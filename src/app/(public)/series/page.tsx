@@ -1,7 +1,7 @@
 import { getLatestSeries } from "../../../services/catalog";
 import MediaGridSection from "../../../components/sections/MediaGridSection";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Séries",

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getAllGenres } from "../../../services/catalog";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Categorias",
   description: "Explore o catálogo por gênero no Playcinix.",
