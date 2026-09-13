@@ -1,0 +1,29 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: playcinix-web:latest
+    container_name: playcinix-web
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      DATABASE_URL: file:/data/playcinix.db
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET é obrigatório — gere com `openssl rand -base64 32`}
+      AUTH_TRUST_HOST: "true"
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://playcinix.com}
+    volumes:
+      # Banco SQLite persistente (NÃO apague em deploys)
+      - sqlite-data:/data
+      # Uploads/imagens (se houver)
+      - uploads:/app/public/uploads
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
