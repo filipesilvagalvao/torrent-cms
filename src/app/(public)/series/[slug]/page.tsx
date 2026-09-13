@@ -23,7 +23,7 @@ import JsonLd from "../../../../components/seo/JsonLd";
 
 type Params = { slug: string };
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
