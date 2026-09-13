@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  role          String    @default("ADMIN")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  comments Comment[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Movie {
+  id           String   @id @default(cuid())
+  tmdbId       Int?     @unique
+  title        String
+  originalTitle String?
+  slug         String   @unique
+  overview     String?
+  year         Int?
+  releaseDate  DateTime?
+  rating       Float?
+  classification String?
+  poster       String?
+  backdrop     String?
+  trailer      String?
+  runtime      Int?
+  languages    String?
+  featured     Boolean  @default(false)
+  published    Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  genres   Genre[]  @relation("MovieGenres")
+  files    File[]   @relation("MovieFiles")
+  comments Comment[] @relation("MovieComments")
+
+  @@index([published])
+  @@index([featured])
+  @@index([createdAt])
+}
+
+model Series {
+  id            String   @id @default(cuid())
+  tmdbId        Int?     @unique
+  title         String
+  originalTitle String?
+  slug          String   @unique
+  overview      String?
+  year          Int?
+  releaseDate   DateTime?
+  rating        Float?
+  classification String?
+  poster        String?
+  backdrop      String?
+  trailer       String?
+  languages     String?
+  featured      Boolean  @default(false)
+  published     Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  genres   Genre[]    @relation("SeriesGenres")
+  seasons  Season[]
+  comments Comment[]  @relation("SeriesComments")
+
+  @@index([published])
+  @@index([featured])
+  @@index([createdAt])
+}
+
+model Season {
+  id           String   @id @default(cuid())
+  number       Int
+  title        String?
+  overview     String?
+  poster       String?
+  releaseDate  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  seriesId String
+  series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  episodes Episode[]
+
+  @@unique([seriesId, number])
+  @@index([seriesId])
+}
+
+model Episode {
+  id          String   @id @default(cuid())
+  number      Int
+  title       String
+  overview    String?
+  runtime     Int?
+  airDate     DateTime?
+  stillImage  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  seasonId String
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  files    File[] @relation("EpisodeFiles")
+
+  @@unique([seasonId, number])
+  @@index([seasonId])
+}
+
+model Genre {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  movies  Movie[]  @relation("MovieGenres")
+  series  Series[] @relation("SeriesGenres")
+}
+
+model File {
+  id        String   @id @default(cuid())
+  name      String?
+  quality   String?
+  resolution String?
+  format    String?
+  language  String?
+  subtitle  String?
+  size      String?
+  link      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movieId   String?
+  movie     Movie?   @relation("MovieFiles", fields: [movieId], references: [id], onDelete: Cascade)
+  episodeId String?
+  episode   Episode? @relation("EpisodeFiles", fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@index([movieId])
+  @@index([episodeId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  authorName String
+  content   String
+  approved  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  userId   String?
+  user     User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  movieId  String?
+  movie    Movie?   @relation("MovieComments", fields: [movieId], references: [id], onDelete: Cascade)
+  seriesId String?
+  series   Series?  @relation("SeriesComments", fields: [seriesId], references: [id], onDelete: Cascade)
+
+  @@index([movieId])
+  @@index([seriesId])
+}
+
+model Settings {
+  id              String   @id @default(cuid())
+  siteName        String   @default("Playcinix")
+  siteDescription String?
+  tmdbApiKey      String?
+  facebookUrl     String?
+  twitterUrl      String?
+  instagramUrl    String?
+  telegramUrl     String?
+  whatsappNumber  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
