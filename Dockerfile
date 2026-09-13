@@ -33,9 +33,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Diretorio do banco SQLite (montar volume persistente aqui no Coolify).
 # Caminho usado em Coolify: DATABASE_URL=file:/data/playcinix.db
-RUN mkdir -p /data && chown -R nextjs:nodejs /data
+RUN mkdir -p /data
 
-USER nextjs
+# Roda como root porque o volume /data montado pelo Coolify sobrescreve
+# o owner do diretorio da imagem; rodar como nextjs quebraria a escrita do SQLite.
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
