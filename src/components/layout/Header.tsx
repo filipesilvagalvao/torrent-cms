@@ -41,9 +41,6 @@ export default function Header({ genres }: Props) {
     <header className="site-header">
       <div className="container site-header__inner">
         <Link href="/" className="site-logo" aria-label="Playcinix - página inicial">
-          <span className="site-logo__mark" aria-hidden="true">
-            <FontAwesomeIcon icon={faBars} />
-          </span>
           <span className="site-logo__name">Playcinix</span>
         </Link>
 

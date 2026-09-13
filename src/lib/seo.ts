@@ -1,43 +1,60 @@
 import type { Metadata } from "next";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const siteMetadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: "Playcinix",
-    template: "%s · Playcinix",
-  },
+  title: "Playcinix | Baixar torrent de filmes e séries grátis",
   description:
-    "Catálogo de filmes e séries com identidade visual própria. Conteúdo próprio, licenciado ou de domínio público.",
+    "Baixar torrent de filmes e séries grátis, o melhor site de torrents para lançamentos, filmes 1080p, filmes 720p, 4k, séries 1080p, séries 720p.",
+  applicationName: "Playcinix",
+  authors: [{ name: "Playcinix", url: baseUrl }],
   keywords: [
-    "filmes",
-    "séries",
-    "catálogo",
-    "playcinix",
-    "download",
-    "streaming",
+    "torrent",
+    "filmes torrent",
+    "séries torrent",
+    "baixar torrent",
+    "torrent grátis",
+    "torrent de filmes",
+    "torrent de séries",
+    "filmes 1080p torrent",
+    "filmes 720p torrent",
+    "filmes 4k torrent",
+    "séries 1080p torrent",
+    "séries 720p torrent",
   ],
-  authors: [{ name: "Playcinix" }],
-  creator: "Playcinix",
-  publisher: "Playcinix",
+  metadataBase: new URL(baseUrl),
   alternates: {
-    canonical: "/",
+    canonical: baseUrl,
   },
   openGraph: {
-    type: "website",
-    siteName: "Playcinix",
-    title: "Playcinix",
+    title: "Playcinix | Baixar torrent de filmes e séries grátis",
     description:
-      "Catálogo de filmes e séries com identidade visual própria.",
+      "Baixar torrent de filmes e séries grátis, o melhor site de torrents para lançamentos, filmes 1080p, filmes 720p, 4k, séries 1080p, séries 720p.",
+    url: baseUrl,
+    siteName: "Playcinix",
+    images: [
+      {
+        url: "/logos/playcinix-logo.jpg",
+        width: 512,
+        height: 512,
+        alt: "Playcinix — imagem de compartilhamento",
+      },
+    ],
     locale: "pt_BR",
-    url: SITE_URL,
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Playcinix",
-    description: "Catálogo de filmes e séries com identidade visual própria.",
+    title: "Playcinix | Baixar torrent de filmes e séries grátis",
+    description:
+      "Baixar torrent de filmes e séries grátis, o melhor site de torrents para lançamentos, filmes 1080p, filmes 720p, 4k, séries 1080p, séries 720p.",
+    creator: "@playcinix",
+    images: ["/logos/playcinix-logo.jpg"],
+  },
+  icons: {
+    icon: "/logos/favicon.ico",
+    shortcut: "/logos/favicon-16x16.png",
+    apple: "/logos/apple-touch-icon.png",
   },
   robots: {
     index: true,
@@ -45,19 +62,17 @@ export const siteMetadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 export function absoluteUrl(path: string): string {
-  if (!path) return SITE_URL;
+  if (!path) return baseUrl;
   if (path.startsWith("http")) return path;
-  return `${SITE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+  return `${baseUrl}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
 export function contentMetadata(opts: {
