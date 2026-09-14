@@ -82,7 +82,6 @@ export default function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={inputStyle}
-          placeholder="admin@playcinix.local"
         />
       </label>
 
@@ -114,18 +113,6 @@ export default function LoginForm() {
           "Entrar"
         )}
       </button>
-
-      <p
-        style={{
-          color: "var(--light-text)",
-          fontSize: "0.75rem",
-          margin: 0,
-          textAlign: "center",
-        }}
-      >
-        Usuário padrão: <code>admin@playcinix.local</code> / senha{" "}
-        <code>admin123</code>
-      </p>
     </form>
   );
 }
